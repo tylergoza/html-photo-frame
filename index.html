@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Photo Frame</title>
+  <style>
+    body {
+      background-color: black;
+    }
+
+  </style>
+</head>
+<body>
+  <canvas id="photoGallery" style="background-color :black;top: 0px;left: 0px;">
+          Your browser does not support the HTML5 canvas tag.
+  </canvas>
+  <script type="text/javascript">
+    (function () {
+      let config = {
+        timer:10000,
+        fps:60
+      }
+      let canvas = document.getElementById('photoGallery')
+      let context = canvas.getContext('2d')
+      let imageInIndex = 1
+      let imageOutIndex = 0
+      let imgs = []
+      let animateComplete = 0
+      let width = window.innerWidth - 15
+      let height = window.innerHeight - 20
+      context.canvas.width = width
+      context.canvas.height = height
+        
+      
+      function loadAllImages() {
+        for (let i=0; i<config.images.length; i++) {
+          let img = new Image()
+          imgs.push(img)
+          img.onload = () => {
+            context.drawImage(imgs[0], 0, 0, width, height)
+          }
+          img.onerror = _ => console.error(`image load failed for ${config.images[i]}`)
+          img.src = config.images[i]
+        }
+      }
+      
+      fetch('./config.json')
+        .then(r => r.json())
+        .then(json => {
+          config = Object.assign(config, json)
+          return Promise.resolve()
+        })
+        .then(_ => {
+          loadAllImages()
+          return Promise.resolve()
+        })
+        .then(_ => {
+          setInterval(animate, config.timer)
+        })
+
+      function animate () {
+        if (animateComplete >= 100) {
+          imageInIndex = imageInIndex >= imgs.length - 1 ? 0 : imageInIndex + 1
+          imageOutIndex = imageOutIndex >= imgs.length - 1 ? 0 : imageOutIndex + 1
+          animateComplete = 0
+          return 
+        }
+        setTimeout(() => {
+          window.requestAnimationFrame(animate)
+          context.clearRect(0,0,context.canvas.width,context.canvas.height)
+          draw(imgs[imageOutIndex], (1-animateComplete/100))
+          draw(imgs[imageInIndex],animateComplete/100)
+          animateComplete++
+        }, 1000/config.fps)
+      }
+
+      function animateOut () {
+        if (animateComplete >= 100) {
+          animateComplete = 0
+          return
+        }
+        setTimeout(() => {
+          window.requestAnimationFrame(animateOut)
+          context.clearRect(0,0,context.canvas.width, context.canvas.height)
+          draw(img,(1-animateComplete/100))
+          animateComplete++
+        }, 1000/config.fps)
+      }
+
+      function draw(img, opacity) {
+        console.log(imageOutIndex, imageInIndex, img.src)
+        context.save()
+        context.globalAlpha = opacity
+        context.drawImage(img,0,0,width,height)
+        context.restore()
+      }
+
+      function loadPhoto() {
+          imgIndex = imgIndex >= images.length - 1 ? 0 : ++imgIndex
+          img.src = images[imgIndex]
+      }
+    })()
+  </script>
+</body>
+
+</html>
