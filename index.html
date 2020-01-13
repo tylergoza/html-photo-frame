@@ -76,19 +76,6 @@
         }, 1000/config.fps)
       }
 
-      function animateOut () {
-        if (animateComplete >= 100) {
-          animateComplete = 0
-          return
-        }
-        setTimeout(() => {
-          window.requestAnimationFrame(animateOut)
-          context.clearRect(0,0,context.canvas.width, context.canvas.height)
-          draw(img,(1-animateComplete/100))
-          animateComplete++
-        }, 1000/config.fps)
-      }
-
       function draw(img, opacity) {
         console.log(imageOutIndex, imageInIndex, img.src)
         context.save()
@@ -97,10 +84,6 @@
         context.restore()
       }
 
-      function loadPhoto() {
-          imgIndex = imgIndex >= images.length - 1 ? 0 : ++imgIndex
-          img.src = images[imgIndex]
-      }
     })()
   </script>
 </body>
