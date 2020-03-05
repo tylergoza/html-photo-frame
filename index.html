@@ -85,6 +85,16 @@
           return Promise.resolve()
         })
         .then(_ => {
+          setTimeout(_ => {
+            imageOut = {
+              pos: imgPos(imgs[imageOutIndex], context.canvas.width, context.canvas.height),
+              img: imgs[imageOutIndex]
+            }
+            imageIn = {
+              pos: imgPos(imgs[imageInIndex], context.canvas.width, context.canvas.height),
+              img: imgs[imageInIndex]
+            }
+          }, 1000)
           setInterval(animate, config.timer)
         })
 
@@ -93,19 +103,21 @@
           imageInIndex = imageInIndex >= imgs.length - 1 ? 0 : imageInIndex + 1
           imageOutIndex = imageOutIndex >= imgs.length - 1 ? 0 : imageOutIndex + 1
           animateComplete = 0
-          imageOut.pos = imgPos(imgs[imageOutIndex], context.canvas.width, context.canvas.height)
-          imageOut.img = imgs[imageOutIndex]
-          imageIn.pos = imgPos(imgs[imageOutIndex], context.canvas.width,
-          context.canvas.height)
-          imageIn.img = imgs[imageInIndex]
+          imageOut = {
+            pos: imgPos(imgs[imageOutIndex], context.canvas.width, context.canvas.height),
+            img: imgs[imageOutIndex]
+          }
+          imageIn = {
+            pos: imgPos(imgs[imageInIndex], context.canvas.width, context.canvas.height),
+            img: imgs[imageInIndex]
+          }
           return 
         }
         setTimeout(() => {
           window.requestAnimationFrame(animate)
-          context.clearRect(imageOut.pos.x, imageOut.pos.y, imageOut.pos.width, imageOut.pos.height)
-          //context.clearRect(0,0,context.canvas.width,context.canvas.height)
-          draw(imageOut.img, (1-animateComplete/100))
-          draw(imageIn.img,animateComplete/100)
+          context.clearRect(0,0,context.canvas.width,context.canvas.height)
+          draw(imageOut, (1-animateComplete/100))
+          draw(imageIn,animateComplete/100)
           animateComplete++
         }, 1000/config.fps)
       }
@@ -114,7 +126,7 @@
         //let pos = imgPos(img, context.canvas.width, context.canvas.height)
         context.save()
         context.globalAlpha = opacity
-        context.drawImage(img.img,img.pos.x,img.pos.y,img.pos.width,img.pos.height)
+        context.drawImage(img.img,img.pos.x,img.pos.y,img.pos.imgWidth,img.pos.imgHeight)
         context.restore()
       }
 
