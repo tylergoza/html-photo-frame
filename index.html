@@ -43,21 +43,28 @@
           y: 0
         }
         
-        if (img.naturalWidth < width) {
-          pos.imgWidth = img.naturalWidth
-          pos.x = width/2 - img.naturalWidth/2
-        }
-        else {
-          pos.imgWidth = width
-        }
+        let scale = Math.min(width/img.naturalWidth, height/img.naturalHeight)
         
-        if (img.naturalHeight < height) {
-          pos.imgHeight = img.naturalHeight
-          pos.y = height/2 - img.naturalHeight/2
-        }
-        else {
-          pos.imgHeight = height
-        }
+        //if (img.naturalWidth < width) {
+        //  pos.imgWidth = img.naturalWidth
+        //}
+        //else {
+        //  pos.imgWidth = width
+        //}
+        
+        //if (img.naturalHeight < height) {
+        //  pos.imgHeight = img.naturalHeight
+        //  pos.y = height/2 - img.naturalHeight/2
+        //}
+        //else {
+        //  pos.imgHeight = height
+        //}
+        pos.imgWidth = img.naturalWidth * scale
+        pos.imgHeight = img.naturalHeight * scale
+        
+        pos.x = (width/2) - (img.naturalWidth/2) * scale
+        pos.y = (height/2) - (img.naturalHeight/2) * scale
+        
         return pos
       }
       function loadAllImages() {
