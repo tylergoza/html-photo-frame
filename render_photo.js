@@ -48,7 +48,7 @@
     }
   }
   
-  fetch('./config.json')
+  fetch('/config.json')
     .then(r => r.json())
     .then(json => {
       config = Object.assign(config, json)
