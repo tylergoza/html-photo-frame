@@ -1,2 +1,3 @@
-./images
+images
 config.json
+node_modules

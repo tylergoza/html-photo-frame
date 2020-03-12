@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Upload image</title>
+    </head>
+    <body>
+        <form action="fileupload" method="post" enctype="multipart/form-data">
+            <label for="filetoupload">Upload image:</label>
+            <input type="file" name="filetoupload"/><br>
+            <label for="filename">Enter New image name:</label>
+            <input type="text" name="filename" /><br>
+            <input type="submit" value="Submit"/>
+        </form>
+        <div id="success-message" style="color: green"></div>
+        <script type="text/javascript" >
+            
+            (function() {
+                let query = new URLSearchParams(window.location.search)
+                if (query.has('successmessage')) {
+                    let success = document.querySelector('#success-message')
+                    success.innerHTML = query.get('successmessage')
+                    setTimeout(_ => {
+                        document.querySelector('#success-message').innerHTML = ''
+                    }, 5000)
+                }
+            })()
+        </script>
+    </body>
+</html>

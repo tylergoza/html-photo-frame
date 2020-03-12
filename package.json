@@ -1,0 +1,25 @@
+{
+  "name": "html-photo-frame",
+  "version": "1.0.0",
+  "description": "Photoframe to use with the raspberry pi or anything with a screen that can run a browser.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tylerwgoza/html-photo-frame.git"
+  },
+  "author": "Tyler Goza",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/tylerwgoza/html-photo-frame/issues"
+  },
+  "homepage": "https://github.com/tylerwgoza/html-photo-frame#readme",
+  "dependencies": {
+    "basic-auth": "^2.0.1",
+    "formidable": "^1.2.2",
+    "fs-extra": "^8.1.0"
+  }
+}
