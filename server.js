@@ -4,12 +4,14 @@ const http = require('http')
 const formidable = require('formidable')
 const fse = require('fs-extra')
 const path = require('path')
+const WebSocket = require('ws')
+const wss = new WebSocket.Server({noServer: true})
 
 let form = undefined
 let upload_form = fse.readFileSync(path.join(__dirname, './upload.html'))
 let index = fse.readFileSync(path.join(__dirname, './index.html'))
 
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
     if (req.url === '/fileupload') {
         form = new formidable.IncomingForm()
         form.parse(req, (err, fields, files) => {
@@ -30,6 +32,7 @@ http.createServer((req, res) => {
                 })
             })
             .then(_ => {
+                wss.emit('')
                 res.writeHead(301, {'Location': '/upload?successmessage=File%20uploaded%20and%20moved'})
                 res.end()
             })
@@ -57,4 +60,22 @@ http.createServer((req, res) => {
         })
     }
     
-}).listen(8080)
+})
+
+wss.on('connection', function connection(ws) {
+    ws.send('connection established')
+})
+
+wss.on('refresh', function refresh(ws) {
+    ws.send('refresh')
+})
+server.on('upgrade', function upgrade(request, socket, head) {
+    if (req.url === '/updates') {
+        wss.handleUpgrade(request, socket, head, function done(ws) {
+            wss.emit('connection', ws, request)
+        })
+    } else {
+        socket.destroy()
+    }
+})
+server.listen(8080)
