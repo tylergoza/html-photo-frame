@@ -13,9 +13,16 @@
   let animateComplete = 0
   let width = window.innerWidth - 15
   let height = window.innerHeight - 20
+  const socket = new WebSocket(`ws://${window.location.host}/updates`)
   context.canvas.width = width
   context.canvas.height = height
   
+  socket.addEventListener('message', data => {
+    if (data.data && data.data === 'refresh') {
+      window.location.reload()
+    }
+  })
+
   function imgPos(img, width, height) {
     let pos = {
       imgWidth: 0,

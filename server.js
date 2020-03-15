@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
                 })
             })
             .then(_ => {
-                wss.emit('')
+                wss.emit('refresh')
                 res.writeHead(301, {'Location': '/upload?successmessage=File%20uploaded%20and%20moved'})
                 res.end()
             })
@@ -67,10 +67,14 @@ wss.on('connection', function connection(ws) {
 })
 
 wss.on('refresh', function refresh(ws) {
-    ws.send('refresh')
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send('refresh')
+        }
+    })
 })
 server.on('upgrade', function upgrade(request, socket, head) {
-    if (req.url === '/updates') {
+    if (request.url === '/updates') {
         wss.handleUpgrade(request, socket, head, function done(ws) {
             wss.emit('connection', ws, request)
         })
